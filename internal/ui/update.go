@@ -17,6 +17,7 @@ func (mw *mainWin) startupBackground() {
 	if mw.opt.SelfTest {
 		return // autotest nie łączy się z internetem
 	}
+	cleanupUpdates()
 	now := time.Now()
 	if diag.UpdateCheckDue(mw.opt.Root, mw.settings, "", now) {
 		mw.background(func() func() {
@@ -35,6 +36,20 @@ func (mw *mainWin) startupBackground() {
 			return nil
 		})
 	}
+}
+
+// cleanupUpdates: w tle usuwa z %TEMP% instalatory pobrane przez udaną aktualizację (diag.CleanupUpdateDownloads).
+// Program uruchomiony ponownie przez instalator startuje, zanim ten skończy pracę i zwolni swój plik - stąd kolejne
+// próby co 15 s przez 2 minuty.
+func cleanupUpdates() {
+	go func() {
+		for i := 0; i < 9; i++ {
+			if _, left := diag.CleanupUpdateDownloads(""); left == 0 {
+				return
+			}
+			time.Sleep(15 * time.Second)
+		}
+	}()
 }
 
 // showUpdateBanner: wersja zainstalowana aktualizuje się sama, przenośna pokazuje stronę wydania.

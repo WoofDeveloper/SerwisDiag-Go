@@ -18,7 +18,7 @@ import (
 )
 
 // Version - wersja programu (zgodna z wersją PowerShell, na której wzorowano tę wersję).
-const Version = "1.5.0"
+const Version = "1.5.1"
 
 const (
 	Author  = "Kacper Suliński - INDUSIP.PL"

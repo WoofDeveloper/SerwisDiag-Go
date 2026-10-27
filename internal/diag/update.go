@@ -356,6 +356,42 @@ func fileSha256(path string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
+// updateDirPrefix: folder pobranego instalatora w %TEMP% - SerwisDiag-Go-aktualizacja-<x.y.z> (DownloadUpdate).
+const updateDirPrefix = "SerwisDiag-Go-aktualizacja-"
+
+var updateDirVersionRx = regexp.MustCompile(`^\d+\.\d+\.\d+$`)
+
+// CleanupUpdateDownloads usuwa z tempDir (domyślnie %TEMP%) instalatory pobrane przez aktualizację do tej albo
+// starszej wersji - skoro działa ta wersja, aktualizacja się udała. Folder wersji nowszej zostaje (instalacja nie
+// doszła do skutku). Instalator, który jeszcze kończy pracę (program uruchomiony ponownie po aktualizacji), trzyma
+// swój plik - taki folder zostaje do następnej próby. Wynik: usunięte foldery i liczba tych, których nie usunięto.
+func CleanupUpdateDownloads(tempDir string) (removed []string, left int) {
+	if tempDir == "" {
+		tempDir = os.TempDir()
+	}
+	cur, ok := ParseVersion(Version)
+	entries, err := os.ReadDir(tempDir)
+	if !ok || err != nil {
+		return nil, 0
+	}
+	for _, e := range entries {
+		ver := strings.TrimPrefix(e.Name(), updateDirPrefix)
+		if !e.IsDir() || ver == e.Name() || !updateDirVersionRx.MatchString(ver) {
+			continue
+		}
+		if v, _ := ParseVersion(ver); v.Compare(cur) > 0 {
+			continue
+		}
+		p := filepath.Join(tempDir, e.Name())
+		if os.RemoveAll(p) == nil {
+			removed = append(removed, p)
+		} else {
+			left++
+		}
+	}
+	return removed, left
+}
+
 // DownloadUpdate odpowiada Get-SdUpdatePackage: pobiera instalator nowej wersji i sprawdza go - suma SHA-256 z pliku
 // .sha256 wydania i numer wersji zapisany w pliku. Niesprawdzony plik nie zostaje uruchomiony.
 func DownloadUpdate(r Release, dir string) (string, error) {
@@ -363,7 +399,7 @@ func DownloadUpdate(r Release, dir string) (string, error) {
 		return "", errText("Wydanie nie zawiera instalatora albo jego sumy kontrolnej - pobierz nową wersję ze strony projektu.")
 	}
 	if dir == "" {
-		dir = filepath.Join(os.TempDir(), "SerwisDiag-Go-aktualizacja-"+r.Latest)
+		dir = filepath.Join(os.TempDir(), updateDirPrefix+r.Latest)
 	}
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return "", err

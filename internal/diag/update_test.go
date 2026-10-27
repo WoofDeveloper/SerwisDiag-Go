@@ -286,3 +286,55 @@ func TestLatestReleaseLive(t *testing.T) {
 	}
 	t.Logf("wydanie %s (masz %s, nowsze: %v), instalator pobrany i sprawdzony: %s; komunikat: %s", r.Latest, Version, r.Newer, filepath.Base(setup), LatestReleaseText(r))
 }
+
+// TestCleanupUpdateDownloads: po udanej aktualizacji znikają pobrane instalatory tej i starszych wersji, a nowszej
+// (instalacja się nie udała), wersji PowerShell i inne foldery zostają. Folder z plikiem jeszcze otwartym (instalator
+// kończy pracę) zostaje do następnej próby.
+func TestCleanupUpdateDownloads(t *testing.T) {
+	dir := t.TempDir()
+	cur, _ := ParseVersion(Version)
+	mk := func(name string, file bool) string {
+		p := filepath.Join(dir, name)
+		if file {
+			_ = os.WriteFile(p, []byte("x"), 0o644)
+			return p
+		}
+		_ = os.MkdirAll(p, 0o755)
+		_ = os.WriteFile(filepath.Join(p, "SerwisDiag-Go-x-instalator.exe"), []byte("MZ"), 0o644)
+		_ = os.WriteFile(filepath.Join(p, "SerwisDiag-Go-x-instalator.exe.sha256"), []byte("0"), 0o644)
+		return p
+	}
+	old := mk(updateDirPrefix+"1.0.0", false)
+	same := mk(updateDirPrefix+Version, false)
+	keep := []string{
+		mk(updateDirPrefix+AppVersion{cur[0], cur[1], cur[2] + 1}.String(), false), // nowsza - instalacja się nie udała
+		mk("SerwisDiag-aktualizacja-1.0.0", false),                                 // wersja PowerShell
+		mk(updateDirPrefix+"1.0.0-test", false),
+		mk(updateDirPrefix+"0.9.0", true), // plik, nie folder
+		mk("inny-folder", false),
+	}
+	// instalator starej wersji jeszcze działa: plik otwarty bez zgody na usunięcie
+	h, err := windows.CreateFile(windows.StringToUTF16Ptr(filepath.Join(old, "SerwisDiag-Go-x-instalator.exe")), windows.GENERIC_READ,
+		windows.FILE_SHARE_READ, nil, windows.OPEN_EXISTING, 0, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	removed, left := CleanupUpdateDownloads(dir)
+	if len(removed) != 1 || removed[0] != same || left != 1 {
+		t.Errorf("z otwartym plikiem: usunięte %v, zostało %d", removed, left)
+	}
+	windows.CloseHandle(h)
+	if removed, left = CleanupUpdateDownloads(dir); len(removed) != 1 || removed[0] != old || left != 0 {
+		t.Errorf("po zamknięciu pliku: usunięte %v, zostało %d", removed, left)
+	}
+	for _, p := range []string{old, same} {
+		if _, err := os.Stat(p); err == nil {
+			t.Errorf("zostało: %s", filepath.Base(p))
+		}
+	}
+	for _, p := range keep {
+		if _, err := os.Stat(p); err != nil {
+			t.Errorf("usunięte niepotrzebnie: %s", filepath.Base(p))
+		}
+	}
+}

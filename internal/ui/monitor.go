@@ -582,6 +582,9 @@ func RunMonitor(root, exe string) int {
 		admin = " (administrator)"
 	}
 	monitorLog("Start monitora " + diag.Version + " (Go)" + admin)
+	if m.testPrefix == "" {
+		cleanupUpdates() // monitor startuje przy logowaniu - sprząta, nawet gdy nikt nie otwiera okna programu
+	}
 	pump(nil)
 	m.trayDelete()
 	for _, h := range m.icons {

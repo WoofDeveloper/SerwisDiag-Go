@@ -100,7 +100,9 @@ Tak. Wszystko, co wersja PowerShell robi poleceniami `Get-CimInstance`, `Get-Win
   „Dostępna nowa wersja” z „Co nowego” i „Zaktualizuj” (przenośna: „Pobierz”), powiadomienie monitora raz na wersję
   i konsola `-Update`. Aktualizacja pobiera instalator w tle, sprawdza sumę SHA-256 z pliku `.sha256` wydania
   i numer wersji zapisany w pliku, uruchamia go w tym samym trybie (dla wszystkich / dla mnie), a program się zamyka
-  i wraca po instalacji. Wydania wersji Go są w osobnym repozytorium **https://github.com/WoofDeveloper/SerwisDiag-Go**
+  i wraca po instalacji. Pobrany instalator nowa wersja usuwa z `%TEMP%` przy starcie okna albo monitora (foldery
+  `SerwisDiag-Go-aktualizacja-<wersja>` tej i starszych wersji; nowszej – po nieudanej instalacji – zostaje; plik
+  jeszcze zajęty przez kończący pracę instalator – kolejna próba co 15 s przez 2 minuty). Wydania wersji Go są w osobnym repozytorium **https://github.com/WoofDeveloper/SerwisDiag-Go**
   (`diag.ProjectURL`) – wersja PowerShell czyta najnowsze wydanie swojego repozytorium, więc wydanie samej wersji Go
   w tym samym repozytorium zepsułoby jej aktualizacje. Pliki wydania: `SerwisDiag-Go-<wersja>-instalator.exe`
   (instalator, z niego aktualizacja) i `SerwisDiag-Go-<wersja>.zip` (wersja przenośna), każdy z sumą `.sha256`.
