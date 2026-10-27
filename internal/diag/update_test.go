@@ -265,3 +265,24 @@ func TestRegistration(t *testing.T) {
 		t.Error("wyłączona - nic nie wysyła")
 	}
 }
+
+// TestLatestReleaseLive: prawdziwe najnowsze wydanie na GitHubie - pliki instalatora i wersji przenośnej z sumami,
+// pobranie instalatora ze sprawdzeniem sumy SHA-256 i numeru wersji, jak przy aktualizacji z programu (go test -short
+// go pomija; potrzebny internet). Uruchamiaj po każdym wydaniu.
+func TestLatestReleaseLive(t *testing.T) {
+	if testing.Short() {
+		t.Skip("test z internetem")
+	}
+	r := LatestRelease(ProjectURL, 15*time.Second, "")
+	if !r.Ok {
+		t.Fatalf("najnowsze wydanie: %s", r.Error)
+	}
+	if r.Setup == "" || r.SetupSha == "" || r.Zip == "" || r.ZipSha == "" || r.Notes == "" {
+		t.Fatalf("niekompletne wydanie %s: %+v", r.Latest, r)
+	}
+	setup, err := DownloadUpdate(r, t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("wydanie %s (masz %s, nowsze: %v), instalator pobrany i sprawdzony: %s; komunikat: %s", r.Latest, Version, r.Newer, filepath.Base(setup), LatestReleaseText(r))
+}

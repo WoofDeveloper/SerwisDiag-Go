@@ -259,8 +259,13 @@ programu, potem `Dokumenty\SerwisDiag`, na końcu `%TEMP%\SerwisDiag`.
 gh release create v<X> dist\SerwisDiag-Go-<X>-instalator.exe dist\SerwisDiag-Go-<X>-instalator.exe.sha256 dist\SerwisDiag-Go-<X>.zip dist\SerwisDiag-Go-<X>.zip.sha256 --title "SerwisDiag Go <X>" --notes-file opis.txt
 ```
 
+4. Sprawdzenie wydania (z internetem): `go test -run TestLatestReleaseLive -v ./internal/diag` – najnowsze wydanie
+   ma wszystkie pliki, a instalator pobiera się z poprawną sumą SHA-256 i numerem wersji.
+
 Wersje zainstalowane sprawdzają najnowsze wydanie raz na dobę (`releases/latest` – wydania próbne oznaczaj jako
-„pre-release”, wtedy program ich nie widzi).
+„pre-release”, wtedy program ich nie widzi). Sprawdzone 2026-10-27 na wydaniu v1.5.0: wersja 1.4.9 (zbudowana
+z kopii kodu ze zmienionym numerem) zainstalowana „dla mnie” po `-Update` pobrała z GitHuba instalator 1.5.0,
+sprawdziła sumę i numer wersji i w 8 s zaktualizowała się w tym samym trybie; potem „Masz najnowszą wersję (1.5.0)”.
 
 ## Porównanie wyników i wydajności
 
