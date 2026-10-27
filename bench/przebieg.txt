@@ -1,0 +1,60 @@
+[1/3] PowerShell (Quick)... 73,6 s, CPU 32,4 s, pamięć 272 MB, WMI 10,8 s
+[1/3] Go (równolegle) (Quick)... 21,9 s, CPU 1,9 s, pamięć 46 MB, WMI 5,9 s
+[1/3] Go (po kolei) (Quick)... 35,3 s, CPU 2,8 s, pamięć 43 MB, WMI 7,2 s
+[2/3] Go (po kolei) (Quick)... 36,0 s, CPU 2,8 s, pamięć 43 MB, WMI 6,8 s
+[2/3] Go (równolegle) (Quick)... 22,8 s, CPU 2,0 s, pamięć 47 MB, WMI 5,5 s
+[2/3] PowerShell (Quick)... 71,9 s, CPU 28,7 s, pamięć 288 MB, WMI 9,1 s
+[3/3] PowerShell (Quick)... 80,7 s, CPU 27,4 s, pamięć 279 MB, WMI 8,9 s
+[3/3] Go (równolegle) (Quick)... 21,1 s, CPU 1,8 s, pamięć 46 MB, WMI 6,8 s
+[3/3] Go (po kolei) (Quick)... 30,9 s, CPU 1,0 s, pamięć 43 MB, WMI 7,1 s
+
+## Scenariusz: Quick (3 pomiary każdej wersji, 2026-10-26 22:48)
+
+| Wersja | Czas całkowity [s] | Czas procesora [s] | Szczyt pamięci procesu [MB] | Szczyt pamięci zadania [MB] | Procesy | CPU usługi WMI [s] | Wynik |
+|---|---|---|---|---|---|---|---|
+| PowerShell | 73,6 (71,9–80,7) | 28,7 (27,4–32,4) | 279 (272–288) | 243 (236–254) | 12 | 9,1 (8,9–10,8) | kryt. 0, ostrz. 4, info 22, OK 53, pomin. 6 |
+| Go (równolegle) | 21,9 (21,1–22,8) | 1,9 (1,8–2,0) | 46 | 104 | 4 | 5,9 (5,5–6,8) | kryt. 0, ostrz. 4, info 23, OK 53, pomin. 6 |
+| Go (po kolei) | 35,3 (30,9–36,0) | 2,8 (1,0–2,8) | 43 | 101 | 4 | 7,1 (6,8–7,2) | kryt. 0, ostrz. 4, info 23, OK 53, pomin. 6 |
+
+W nawiasach: najkrótszy i najdłuższy pomiar; poza nawiasem mediana.
+
+Zapisano: bench\wyniki-quick-20261026-224146.md
+[1/3] PowerShell (Quick bez internetu)... 37,1 s, CPU 10,3 s, pamięć 324 MB, WMI 11,1 s
+[1/3] Go (równolegle) (Quick bez internetu)... 12,4 s, CPU 1,0 s, pamięć 39 MB, WMI 7,3 s
+[1/3] Go (po kolei) (Quick bez internetu)... 18,3 s, CPU 0,9 s, pamięć 38 MB, WMI 4,8 s
+[2/3] Go (po kolei) (Quick bez internetu)... 18,6 s, CPU 0,8 s, pamięć 38 MB, WMI 5,2 s
+[2/3] Go (równolegle) (Quick bez internetu)... 13,2 s, CPU 0,9 s, pamięć 40 MB, WMI 8,3 s
+[2/3] PowerShell (Quick bez internetu)... 14354,3 s, CPU 12,6 s, pamięć 312 MB, WMI 7,6 s
+[3/3] PowerShell (Quick bez internetu)... 28,2 s, CPU 10,6 s, pamięć 332 MB, WMI 4,2 s
+[3/3] Go (równolegle) (Quick bez internetu)... 9,2 s, CPU 1,3 s, pamięć 40 MB, WMI 3,2 s
+[3/3] Go (po kolei) (Quick bez internetu)... 14,4 s, CPU 1,1 s, pamięć 39 MB, WMI 2,7 s
+
+## Scenariusz: Quick bez internetu (3 pomiary każdej wersji, 2026-10-27 02:51)
+
+| Wersja | Czas całkowity [s] | Czas procesora [s] | Szczyt pamięci procesu [MB] | Szczyt pamięci zadania [MB] | Procesy | CPU usługi WMI [s] | Wynik |
+|---|---|---|---|---|---|---|---|
+| PowerShell | 37,1 (28,2–14354,3) | 10,6 (10,3–12,6) | 324 (312–332) | 290 (277–298) | 10 | 7,6 (4,2–11,1) | kryt. 0, ostrz. 4, info 22, OK 47, pomin. 8 |
+| Go (równolegle) | 12,4 (9,2–13,2) | 1,0 (0,9–1,3) | 40 | 104 (104–106) | 4 | 7,3 (3,2–8,3) | kryt. 0, ostrz. 4, info 23, OK 47, pomin. 8 |
+| Go (po kolei) | 18,3 (14,4–18,6) | 0,9 (0,8–1,1) | 38 | 101 | 4 | 4,8 (2,7–5,2) | kryt. 0, ostrz. 4, info 23, OK 47, pomin. 8 |
+
+W nawiasach: najkrótszy i najdłuższy pomiar; poza nawiasem mediana.
+
+Zapisano: bench\wyniki-quick-bez-internetu-20261026-224848.md
+[1/2] PowerShell (Full)... 73,2 s, CPU 16,9 s, pamięć 343 MB, WMI 11,8 s
+[1/2] Go (równolegle) (Full)... 54,2 s, CPU 1,2 s, pamięć 47 MB, WMI 11,5 s
+[1/2] Go (po kolei) (Full)... 55,2 s, CPU 1,7 s, pamięć 45 MB, WMI 9,1 s
+[2/2] Go (po kolei) (Full)... 43,9 s, CPU 2,8 s, pamięć 44 MB, WMI 9,8 s
+[2/2] Go (równolegle) (Full)... 31,1 s, CPU 2,0 s, pamięć 51 MB, WMI 8,5 s
+[2/2] PowerShell (Full)... 68,7 s, CPU 13,4 s, pamięć 312 MB, WMI 12,6 s
+
+## Scenariusz: Full (2 pomiary każdej wersji, 2026-10-27 02:56)
+
+| Wersja | Czas całkowity [s] | Czas procesora [s] | Szczyt pamięci procesu [MB] | Szczyt pamięci zadania [MB] | Procesy | CPU usługi WMI [s] | Wynik |
+|---|---|---|---|---|---|---|---|
+| PowerShell | 71,0 (68,7–73,2) | 15,1 (13,4–16,9) | 328 (312–343) | 296 (284–308) | 14 | 12,2 (11,8–12,6) | kryt. 0, ostrz. 4, info 24, OK 55, pomin. 7 |
+| Go (równolegle) | 42,6 (31,1–54,2) | 1,6 (1,2–2,0) | 49 (47–51) | 104 (103–105) | 4 | 10,0 (8,5–11,5) | kryt. 0, ostrz. 4, info 25, OK 55, pomin. 7 |
+| Go (po kolei) | 49,5 (43,9–55,2) | 2,2 (1,7–2,8) | 44 | 101 | 4 | 9,4 (9,1–9,8) | kryt. 0, ostrz. 4, info 25, OK 55, pomin. 7 |
+
+W nawiasach: najkrótszy i najdłuższy pomiar; poza nawiasem mediana.
+
+Zapisano: bench\wyniki-full-20261027-025102.md

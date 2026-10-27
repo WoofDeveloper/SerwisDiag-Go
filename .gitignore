@@ -1,0 +1,9 @@
+# pliki programu i wydania (budowane: build.ps1, tools\Build-Release.ps1)
+*.exe
+*.syso
+dist/
+
+# raporty, ustawienia i dzienniki - dane komputerow (numery seryjne, klucze Windows, nazwy kont)
+raporty/
+config/
+logs/
